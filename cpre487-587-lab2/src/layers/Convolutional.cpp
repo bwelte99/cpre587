@@ -14,38 +14,55 @@ namespace ML {
 
         std::cout << "conv layer: DEBUG" << std::endl;
 
-        //Read in convolution input & parameters (NOTE: Array3D_fp32 = float***)
-        Array3D_fp32 convInput = dataIn.getData<fp32***>();
+        //read in convolution parameters
         const LayerParams convInputParams = this->getInputParams();
         const LayerParams convOutputParams = this->getOutputParams();
         const LayerParams convWeightParams = this->getWeightParams();
         const LayerParams convBiasParams = this->getBiasParams();
 
+        //Read in convolution input data (NOTE: Array3D_fp32 = float***)
+        Array3D_fp32 convInput = dataIn.getData<fp32***>();
+
+        //assign the outData LayerData object's data pointer to a floating point array
+        Array3D_fp32 convOutput = this->getOutputData().getData<fp32***>();
+        convOutput[0][0][0] = 42.0;
+
         std::cout << "\tKernel dimensions: " << convWeightParams.dims[0] << " x " << convWeightParams.dims[1] << " x " << convWeightParams.dims[2] << std::endl;
 
-        //Store dimensions
-        //TODO
+        //Store Input dimensions
+        const int H = convInputParams.dims[0];  //input height
+        const int W = convInputParams.dims[1];  //input width
+        const int C = convInputParams.dims[2];  //number of input fmaps
+
+        //Store Output dimensions
+        const int P = convOutputParams.dims[0];
+        const int Q = convOutputParams.dims[1];
+
+        //Store Kernel dimensions
+        const int R = convWeightParams.dims[0];   //filter height
+        const int S = convWeightParams.dims[1];   //filter width
+        const int M = convWeightParams.dims[2];   //number of filters/output fmaps
 
 
         //TODO: assign one output pixel based on kernel dimensions
         //where are weightparams & biasparams?
 
-
-
+        
+        std::cout << "\t input elements are " << convInputParams.elementSize << " bytes"<< std::endl;
+        std::cout << "\t input dims are " << convInputParams.dims[0] << " by " << convInputParams.dims[1] << " by " << convInputParams.dims[2] << std::endl;
 
         /*
-        std::cout << "\t elements are " << convParams.elementSize << " bytes"<< std::endl;
-        std::cout << "\t dims are " << convParams.dims[0] << " by " << convParams.dims[1] << " by " << convParams.dims[2] << std::endl;
-
         //attempting to print the data:
-        for (int i = 0; i < convParams.dims[0]; i++){
-            for (int j = 0; j < convParams.dims[1]; j++){
-                printf("%1.2f ", ***(convInput + j + (i * convParams.dims[1])));
+        for (int i = 0; i < H; i++){
+            for (int j = 0; j < W; j++){
+                //printf("%1.2f ", ***(convInput + j + (i * convInputParams.dims[1])));
+                printf("%1.2f ", convInput[j][i][0]);
             }
             printf("\n");
         }
-      
         */
+      
+        
     }
 
 
