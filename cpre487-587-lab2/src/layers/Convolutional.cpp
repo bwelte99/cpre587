@@ -9,7 +9,7 @@
 namespace ML {
     // --- Begin Student Code ---
 
-    // Compute the convlution for the layer data
+    // Compute the convolution for the layer data
     void ConvolutionalLayer::computeNaive(const LayerData &dataIn) const {
 
         std::cout << "conv layer: DEBUG" << std::endl;
@@ -25,6 +25,7 @@ namespace ML {
 
         //assign the outData LayerData object's data pointer to a floating point array
         Array3D_fp32 convOutput = this->getOutputData().getData<fp32***>();
+        //sample output assignment
         convOutput[0][0][0] = 42.0;
 
         std::cout << "\tKernel dimensions: " << convWeightParams.dims[0] << " x " << convWeightParams.dims[1] << " x " << convWeightParams.dims[2] << std::endl;
@@ -55,7 +56,6 @@ namespace ML {
         //attempting to print the data:
         for (int i = 0; i < H; i++){
             for (int j = 0; j < W; j++){
-                //printf("%1.2f ", ***(convInput + j + (i * convInputParams.dims[1])));
                 printf("%1.2f ", convInput[j][i][0]);
             }
             printf("\n");
