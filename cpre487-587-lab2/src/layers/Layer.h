@@ -177,7 +177,6 @@ namespace ML {
         for (std::size_t i = 0; i < aParams.dims.size(); i++) {
             assert(aParams.dims[i] == bParams.dims[i] && "LayerData arrays must have the same size dimentions to be compared");
         }
-
         return compareArray<T>(getData<T>(), other.getData<T>(), aParams.dims);
     }
 

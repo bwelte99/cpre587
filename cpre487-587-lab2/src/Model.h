@@ -52,15 +52,14 @@ namespace ML {
                 //     ((SoftmaxLayer*) layers[i])->allocateLayer<T>();
                 //     break;
                 case Layer::LayerType::MAX_POOLING:
-                     ((MaxPoolingLayer*) layers[i])->allocateLayer<T>();
-                     break;
+                //     ((MaxPoolingLayer*) layers[i])->allocateLayer<T>();
+                //     break;
                 case Layer::LayerType::NONE:
                     [[fallthrough]];
                 default:
                     assert(false && "Cannot allocate layer of type none");
                     break;
             }
-
         }
     }
 

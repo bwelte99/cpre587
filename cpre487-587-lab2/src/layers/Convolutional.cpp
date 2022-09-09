@@ -25,10 +25,10 @@ namespace ML {
 
         //assign the outData LayerData object's data pointer to a floating point array
         Array3D_fp32 convOutput = this->getOutputData().getData<fp32***>();
-        //sample output assignment
-        convOutput[0][0][0] = 42.0;
-
-        std::cout << "\tKernel dimensions: " << convWeightParams.dims[0] << " x " << convWeightParams.dims[1] << " x " << convWeightParams.dims[2] << std::endl;
+        
+        //assign the convolutional kernel weights to a floating point array
+        Array4D_fp32 kernelWeights = this->getWeightData().getData<fp32****>();
+        Array1D_fp32 kernelBiases = this->getBiasData().getData<fp32*>();
 
         //Store Input dimensions
         const int H = convInputParams.dims[0];  //input height
@@ -36,33 +36,54 @@ namespace ML {
         const int C = convInputParams.dims[2];  //number of input fmaps
 
         //Store Output dimensions
-        const int P = convOutputParams.dims[0];
-        const int Q = convOutputParams.dims[1];
+        const int P = convOutputParams.dims[0]; //output height
+        const int Q = convOutputParams.dims[1]; //output width
 
         //Store Kernel dimensions
         const int R = convWeightParams.dims[0];   //filter height
         const int S = convWeightParams.dims[1];   //filter width
-        const int M = convWeightParams.dims[2];   //number of filters/output fmaps
-
-
-        //TODO: assign one output pixel based on kernel dimensions
-        //where are weightparams & biasparams?
-
-        
-        std::cout << "\t input elements are " << convInputParams.elementSize << " bytes"<< std::endl;
-        std::cout << "\t input dims are " << convInputParams.dims[0] << " by " << convInputParams.dims[1] << " by " << convInputParams.dims[2] << std::endl;
+        const int M = convWeightParams.dims[3];   //number of filters/output fmaps
 
         /*
-        //attempting to print the data:
-        for (int i = 0; i < H; i++){
-            for (int j = 0; j < W; j++){
-                printf("%1.2f ", convInput[j][i][0]);
-            }
-            printf("\n");
-        }
+        std::cout << "\t DEBUG: M = " << M << std::endl;
+        std::cout << "\t DEBUG: C = " << C << std::endl;
+        std::cout << "\t DEBUG: H = " << H << std::endl;
+        std::cout << "\t DEBUG: W = " << W << std::endl;
+        std::cout << "\t DEBUG: R = " << R << std::endl;
+        std::cout << "\t DEBUG: S = " << S << std::endl;
+        std::cout << "\t DEBUG: P = " << P << std::endl;
+        std::cout << "\t DEBUG: Q = " << Q << std::endl;
         */
-      
-        
+        //shift kernel position down 1 row
+        for (int p = 0; p < P; p++){
+            //shift kernel location over 1 column
+            for (int q = 0; q < Q; q++){
+
+                //sum up the product of one of the M convolution kernels with all C input channels
+                for (int m = 0; m < M; m++){
+                    
+                    //initialize the running sum of kernel products over all C input channels
+                    float sum = 0.0;
+
+                    //flip & shift using convolution kernel on all C input channels
+                    for (int c = 0; c < C; c++){
+                        for (int r = 0; r < R; r++){
+                            for (int s = 0; s < S; s++){
+                                sum += convInput[p + r][q + s][c] * kernelWeights[r][s][c][m];
+                            }
+                        }
+                    }
+
+                    //assign one pixel of convolution output
+                    convOutput[p][q][m] = sum + kernelBiases[m];
+
+                    //RELU
+                    if (convOutput[p][q][m] < 0.0){
+                        convOutput[p][q][m] = 0.0;
+                    }
+                }
+            }
+        }
     }
 
 
