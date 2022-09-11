@@ -12,7 +12,7 @@ namespace ML {
     // Compute the convolution for the layer data
     void ConvolutionalLayer::computeNaive(const LayerData &dataIn) const {
 
-        std::cout << "conv layer: DEBUG" << std::endl;
+        //std::cout << "\tDEBUG: conv layer" << std::endl;
 
         //read in convolution parameters
         const LayerParams convInputParams = this->getInputParams();
@@ -77,13 +77,17 @@ namespace ML {
                     //assign one pixel of convolution output
                     convOutput[p][q][m] = sum + kernelBiases[m];
 
-                    //RELU
+                    //ReLU
                     if (convOutput[p][q][m] < 0.0){
                         convOutput[p][q][m] = 0.0;
                     }
                 }
             }
         }
+
+        //std::cout << "\t\t...done computing" << std::endl;
+
+
     }
 
 

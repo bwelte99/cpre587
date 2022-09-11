@@ -5,10 +5,10 @@
 #include "../Types.h"
 
 namespace ML {
-    class SoftmaxLayer : public Layer {
+    class FlattenLayer : public Layer {
         public:
-            SoftmaxLayer(const LayerParams inParams, const LayerParams outParams)
-                : Layer(inParams, outParams, LayerType::SOFTMAX) {}
+            FlattenLayer(const LayerParams inParams, const LayerParams outParams)
+                : Layer(inParams, outParams, LayerType::FLATTEN) {};
 
             // Allocate all resources needed for the layer & Load all of the required data for the layer
             template<typename T>

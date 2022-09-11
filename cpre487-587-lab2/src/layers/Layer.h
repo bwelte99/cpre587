@@ -81,7 +81,8 @@ namespace ML {
                 CONVOLUTIONAL,
                 DENSE,
                 SOFTMAX,
-                MAX_POOLING
+                MAX_POOLING,
+                FLATTEN
             };
         
         public:
@@ -171,11 +172,13 @@ namespace ML {
             std::cerr << "Comparison between two LayerData arrays with different element size (and possibly data types) is not advised ("
                         << aParams.elementSize << " and " << bParams.elementSize << ")\n";
         }
-        assert(aParams.dims.size() == bParams.dims.size() && "LayerData arrays must have the same number of dimentions");
+        //std::cout << "\tDEBUG: model data has " << aParams.dims.size() << " dimensions my data has " << bParams.dims.size() << std::endl;
+        //std::cout << "\tDEBUG: model data is " << aParams.dims[0] << " x " << aParams.dims[1] << " x " << aParams.dims[2] << std::endl;
+        assert(aParams.dims.size() == bParams.dims.size() && "LayerData arrays must have the same number of dimensions");
         
         // Ensure each dimention size matches
         for (std::size_t i = 0; i < aParams.dims.size(); i++) {
-            assert(aParams.dims[i] == bParams.dims[i] && "LayerData arrays must have the same size dimentions to be compared");
+            assert(aParams.dims[i] == bParams.dims[i] && "LayerData arrays must have the same size dimensions to be compared");
         }
         return compareArray<T>(getData<T>(), other.getData<T>(), aParams.dims);
     }
@@ -183,6 +186,10 @@ namespace ML {
     // Compare within an Epsilon to ensure layer datas are similar within reason
     template<typename T, typename T_EP = float>
     float LayerData::compareWithin(const LayerData& other, const T_EP epsilon) const {
+
+        //std::cout << "\tDEBUG: compareWithin()" << std::endl;
+
+
         return epsilon > compare<T>(other);
     }
 
